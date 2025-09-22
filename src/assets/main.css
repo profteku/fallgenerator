@@ -1,0 +1,47 @@
+/* Globale Stile und Dark Mode Setup */
+/* @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap'); */
+
+@font-face {
+    font-family: CanvaSans;
+    src: url("/canva-sans-regular.otf") format("opentype");
+}
+@font-face {
+    font-family: CanvaSans;
+    font-weight: bold;
+    src: url("/canva-sans-bold.otf") format("opentype");
+}
+
+:root {
+  --primary-color: #1DB954; /* Spotify Grün */
+  --secondary-color: #FF5733; /* Akzent Orange/Rot */
+  --bg-gradient-start: #2f3640; /* #29324c */
+  --bg-gradient-end: #121828;
+  --surface-color: #181818;
+  --text-primary: #FFFFFF;
+  --text-secondary: #B3B3B3;
+}
+
+body {
+  margin: 0;
+  background-color: var(--bg-gradient-end);
+  background-image: linear-gradient(30deg, var(--bg-gradient-end), var(--bg-gradient-start));
+  min-height: 100vh;
+
+
+  color: var(--text-primary);
+  font-family: 'CanvaSans', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* Hilfsklassen für Lade- und Fehlerzustände */
+.loading, .not-found {
+  text-align: center;
+  padding: 2rem;
+  font-size: 1.2rem;
+  color: var(--text-secondary);
+}
