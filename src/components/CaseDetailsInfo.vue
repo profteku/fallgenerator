@@ -8,9 +8,9 @@ defineProps({
 // Farb-Mapping für die Tags
 const tagColors = {
   gruselig: '#2E5EAA', // Blau
-  hitchcock: '#black', // Schwarz
+  hitchcock: '#000000', // Schwarz
   skinny: '#4281A4', // Hellblau
-  raetsel: '#69140E', // Dunkelrot
+  rätsel: '#69140E', // Dunkelrot
   morton: '#B2AA8E', // Grau
   kunst: '#D5A021', // Gelb
   tiere: '#6B654B', // Dunkelgrau
@@ -32,19 +32,24 @@ const getYear = (dateString) => {
   if (!dateString) return 'N/A';
   return new Date(dateString).getFullYear();
 };
+const capitalizeFirstLetter = (string) => {
+  if (!string) return '';
+  return string.charAt(0).toUpperCase() + string.slice(1);
+};
 </script>
 
 <template>
   <h2>{{ name }}</h2>
   <p class="meta-info">erschienen {{ getYear(releaseDate) }} | 44Min</p>
   <div class="tags">
-    <span v-for="tag in tags" 
-          :key="tag" 
-          class="tag" 
-          :style="{ '--tag-color': getTagColor(tag) }">
-      {{ tag }}
-    </span>
-  </div>
+  <router-link v-for="tag in tags" 
+        :key="tag" 
+        :to="{ name: 'TagView', query: { filter: tag } }"  
+        class="tag" 
+        :style="{ '--tag-color': getTagColor(tag) }">
+    {{ capitalizeFirstLetter(tag) }}
+  </router-link>
+</div>
 </template>
 
 <style scoped>
@@ -70,20 +75,28 @@ h2 {
   gap: 0.5rem;
   text-transform: capitalize;
   font-family: CanvaSans;
-  font-weight: 400;
+  font-weight: bold;
 }
 
 .tag {
   position: relative;
   background-color: transparent;
   color: #E0E0E0;
-  padding: 0.3rem 0.8rem 0.3rem 1.5rem; /* Platz links für den Punkt */
-  border-radius: 20px;
+  padding: 0.4rem 0.8rem 0.4rem 1.5rem; /* Platz links für den Punkt */
+  border-radius: 10px;
   font-size: 0.8rem;
   border: 1px solid white;
   display: flex;
   align-items: center;
+  text-decoration: none;
+  cursor: pointer;
 }
+.tag:hover {
+  background-color: #dcdde1;
+  color: #2f3640;
+  cursor: pointer;
+}
+
 
 .tag::before {
   content: '';

@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import HomeView from '../views/HomeView.vue';
 import CaseView from '../views/CaseView.vue';
+import TagView from '../views/TagView.vue';
 
 const routes = [
   {
@@ -14,6 +15,12 @@ const routes = [
     name: 'CaseDetails',
     component: CaseView,
     props: true, // Übergibt die Route-Parameter als Props an die Komponente
+  },
+  {
+    path: '/tags', // z.B. /tag/gruselig
+    name: 'TagView',
+    component: TagView,
+    props: true, // Übergibt 'tagName' als Prop an die Komponente
   },
 ];
 

@@ -16,6 +16,13 @@ export const useCaseStore = defineStore('cases', () => {
       return allCases.value.find(c => c.nr === caseNr);
     }
   });
+  const uniqueTags = computed(() => {
+    if (allCases.value.length === 0) return [];
+    
+    const allTags = allCases.value.flatMap(c => c.tags || []);
+    const unique = [...new Set(allTags)]; // Entfernt Duplikate
+    return unique.sort(); // Sortiert alphabetisch
+  });
 
   // === ACTIONS ===
   async function fetchCases() {
@@ -83,12 +90,14 @@ export const useCaseStore = defineStore('cases', () => {
   }
 
   return {
+    allCases,
     isLoading,
     featuredCases,
     recentlySuggested, // Optional, falls du es mal anzeigen willst
     getCaseByNr,
     getRandomCase,
     fetchFeaturedCases,
-    fetchCases
+    fetchCases,
+    uniqueTags
   };
 });

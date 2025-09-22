@@ -14,14 +14,14 @@ onMounted(() => {
     <router-link :to="`/fall/${caseStore.featuredCases.week.nr}`" class="case-card">
       <img :src="caseStore.featuredCases.week.cover_url" alt="Cover Fall der Woche" class="card-cover">
       <div class="card-label">
-        <p>Fall der Woche</p>
+        <p>FALL DER WOCHE</p>
       </div>
     </router-link>
 
     <router-link :to="`/fall/${caseStore.featuredCases.secret.nr}`" class="case-card">
       <img :src="caseStore.featuredCases.secret.cover_url" alt="Cover Geheimer Fall" class="card-cover">
       <div class="card-label">
-        <p>Geheimer Fall</p>
+        <p>GEHEIMER FALL</p>
       </div>
     </router-link>
   </div>

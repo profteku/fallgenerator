@@ -8,7 +8,7 @@ const emit = defineEmits(['suggest-another-case']);
 
 <template>
   <div class="actions">
-    <a :href="'https://open.spotify.com/episode/' + spotifyId" target="_blank" class="action-button spotify">
+    <a :href="'https://open.spotify.com/album/' + spotifyId" target="_blank" class="action-button spotify">
       SPOTIFY
     </a>
     <button @click="console.log('Nochmal Button in CaseActions geklickt!'); emit('suggest-another-case')" class="action-button nochmal">
