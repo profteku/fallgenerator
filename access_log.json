@@ -1,0 +1,62 @@
+[
+  {
+    "timestamp": "2025-09-23T09:35:45.467Z",
+    "hashed_ip": "eff8e7ca506627fe15dda5e0e512fcaad70b6d520f37cc76597fdb4f2d83a1a3",
+    "event_type": "spotify_click",
+    "page_path": "/fall/112",
+    "details": {
+      "case_nr": "112",
+      "name": "Schlucht der Dämonen"
+    }
+  },
+  {
+    "timestamp": "2025-09-23T09:36:04.784Z",
+    "hashed_ip": "eff8e7ca506627fe15dda5e0e512fcaad70b6d520f37cc76597fdb4f2d83a1a3",
+    "event_type": "spotify_click",
+    "page_path": "/fall/112",
+    "details": {
+      "case_nr": "112",
+      "name": "Schlucht der Dämonen"
+    }
+  },
+  {
+    "timestamp": "2025-09-23T09:36:09.995Z",
+    "hashed_ip": "eff8e7ca506627fe15dda5e0e512fcaad70b6d520f37cc76597fdb4f2d83a1a3",
+    "event_type": "spotify_click",
+    "page_path": "/fall/162",
+    "details": {
+      "case_nr": "162",
+      "name": "und der schreiende Nebel"
+    }
+  },
+  {
+    "timestamp": "2025-09-24T08:27:06.816Z",
+    "hashed_ip": "eff8e7ca506627fe15dda5e0e512fcaad70b6d520f37cc76597fdb4f2d83a1a3",
+    "event_type": "spotify_click",
+    "page_path": "/fall/21",
+    "details": {
+      "case_nr": "21",
+      "name": "und der tanzende Teufel"
+    }
+  },
+  {
+    "timestamp": "2025-09-24T08:27:14.460Z",
+    "hashed_ip": "eff8e7ca506627fe15dda5e0e512fcaad70b6d520f37cc76597fdb4f2d83a1a3",
+    "event_type": "spotify_click",
+    "page_path": "/fall/22",
+    "details": {
+      "case_nr": "22",
+      "name": "und der verschwundene Schatz"
+    }
+  },
+  {
+    "timestamp": "2025-09-24T09:16:07.144Z",
+    "hashed_ip": "eff8e7ca506627fe15dda5e0e512fcaad70b6d520f37cc76597fdb4f2d83a1a3",
+    "event_type": "spotify_click",
+    "page_path": "/fall/220",
+    "details": {
+      "case_nr": "220",
+      "name": "Im Wald der Gefahren"
+    }
+  }
+]

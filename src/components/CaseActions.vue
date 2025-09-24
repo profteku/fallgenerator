@@ -1,14 +1,25 @@
 <script setup>
-defineProps({
+import { logEvent } from '@/utils/logging.js';
+const props = defineProps({
   spotifyId: String,
+  casenr: String,
+  name: String,
 });
+console.log(props.casenr);
+function handleSpotifyClick() {
+//logging Util wird aufgerufen
+  logEvent('spotify_click', { case_nr: props.casenr, name: props.name }); 
+  console.log("Fall", props.casenr ,"auf Spotify geöffnet");
+}
+
+
 
 const emit = defineEmits(['suggest-another-case']);
 </script>
 
 <template>
   <div class="actions">
-    <a :href="'https://open.spotify.com/album/' + spotifyId" target="_blank" class="action-button spotify">
+    <a :href="'https://open.spotify.com/album/' + spotifyId" target="_blank" class="action-button spotify" @click="handleSpotifyClick">
       SPOTIFY
     </a>
     <button @click="console.log('Nochmal Button in CaseActions geklickt!'); emit('suggest-another-case')" class="action-button nochmal">

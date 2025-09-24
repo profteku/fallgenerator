@@ -50,7 +50,9 @@ onMounted(() => {
       />
     </div> 
       <CaseActions 
-        :spotify-id="currentCase.spotifyId" 
+        :spotify-id="currentCase.spotifyId"
+        :casenr="props.nr"
+        :name="currentCase.name"
         @suggest-another-case="suggestAnotherCase" 
       />
       
