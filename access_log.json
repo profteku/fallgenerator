@@ -58,5 +58,53 @@
       "case_nr": "220",
       "name": "Im Wald der Gefahren"
     }
+  },
+  {
+    "timestamp": "2025-09-24T19:14:33.477Z",
+    "hashed_ip": "eff8e7ca506627fe15dda5e0e512fcaad70b6d520f37cc76597fdb4f2d83a1a3",
+    "event_type": "spotify_click",
+    "page_path": "/fall/80",
+    "details": {
+      "case_nr": "80",
+      "name": "Geheimakte Ufo"
+    },
+    "client": {
+      "device_type": "desktop",
+      "os": {
+        "name": "Linux"
+      },
+      "browser": {
+        "name": "Firefox",
+        "version": "142.0"
+      }
+    },
+    "screen": {
+      "screen_resolution": "2560x1080",
+      "viewport_size": "1380x956"
+    }
+  },
+  {
+    "timestamp": "2025-09-24T19:14:39.503Z",
+    "hashed_ip": "eff8e7ca506627fe15dda5e0e512fcaad70b6d520f37cc76597fdb4f2d83a1a3",
+    "event_type": "spotify_click",
+    "page_path": "/fall/214",
+    "details": {
+      "case_nr": "214",
+      "name": "und der Geisterbunker"
+    },
+    "client": {
+      "device_type": "desktop",
+      "os": {
+        "name": "Linux"
+      },
+      "browser": {
+        "name": "Firefox",
+        "version": "142.0"
+      }
+    },
+    "screen": {
+      "screen_resolution": "2560x1080",
+      "viewport_size": "1380x956"
+    }
   }
 ]

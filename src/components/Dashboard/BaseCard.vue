@@ -19,12 +19,16 @@ export default {
 .card {
   background-color: #021728;
   border-radius: 12px;
-  padding: 1.5rem;
+  padding: 1rem;
   color: white;
+  align-items: center;
+  text-align: center
 }
 .card-title {
+  font-family: CanvaSans;
+  font-weight: bold;
   margin-top: 0;
   margin-bottom: 1rem;
-  font-size: 1.1rem;
+  font-size: 1rem;
 }
 </style>

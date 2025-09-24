@@ -22,7 +22,6 @@ const props = defineProps({
   }
 });
 
-// Eine computed Property, die die Daten für Chart.js formatiert
 const chartConfig = computed(() => ({
   labels: props.chartData.labels,
   datasets: [
@@ -40,5 +39,14 @@ const chartConfig = computed(() => ({
 const chartOptions = {
   responsive: true,
   maintainAspectRatio: false,
+  scales: {
+    y: { 
+      ticks: {
+        // Diese Option sorgt dafür, dass nur ganze Zahlen auf der Achse angezeigt werden.
+        precision: 0 
+      },
+      beginAtZero: true // Stellt sicher, dass die Achse bei 0 beginnt
+    }
+  }
 };
 </script>

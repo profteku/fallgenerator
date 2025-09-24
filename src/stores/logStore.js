@@ -11,99 +11,166 @@ export const useLogStore = defineStore('logs', {
 
   // getters sind wie berechnete Eigenschaften für Stores (z.B. für Auswertungen)
   getters: {
+    // --- BESTEHENDE GETTER ---
     totalEvents: (state) => state.logEntries.length,
+    
     mostPopularCase: (state) => {
-    if (state.logEntries.length === 0) {
-      // Gibt ein Standardobjekt zurück, damit die Komponente nicht bricht
-      return { case_nr: null, count: 0, name: 'Keine Daten' };
-    }
-
-    // 1. Zähle die Vorkommen und speichere den Namen mit ab
-    const caseData = state.logEntries.reduce((acc, log) => {
-      const caseNr = log.details?.case_nr;
-      const caseName = log.details?.name; // Der neue Name aus den Logs
-
-      // Nur Logs mit einer case_nr berücksichtigen
-      if (caseNr) {
-        if (!acc[caseNr]) {
-          // Wenn der Fall zum ersten Mal auftaucht, initialisiere ihn
-          acc[caseNr] = { count: 0, name: caseName || `Fall #${caseNr}` };
-        }
-        acc[caseNr].count++;
+      if (state.logEntries.length === 0) {
+        return { case_nr: null, count: 0, name: 'Keine Daten' };
       }
-      return acc;
-    }, {});
-    // Ergebnis: { '184': { count: 5, name: 'Der Spuk im alten Haus' }, ... }
+      const caseData = state.logEntries.reduce((acc, log) => {
+        const caseNr = log.details?.case_nr;
+        const caseName = log.details?.name;
+        if (caseNr) {
+          if (!acc[caseNr]) {
+            acc[caseNr] = { count: 0, name: caseName || `Fall #${caseNr}` };
+          }
+          acc[caseNr].count++;
+        }
+        return acc;
+      }, {});
+      const popularEntry = Object.entries(caseData).sort((a, b) => b[1].count - a[1].count)[0];
+      if (!popularEntry) {
+        return { case_nr: null, count: 0, name: 'Keine Fall-Daten' };
+      }
+      return {
+        case_nr: popularEntry[0],
+        count: popularEntry[1].count,
+        name: popularEntry[1].name
+      };
+    },
 
-    // 2. Finde den Eintrag mit der höchsten Anzahl
-    const popularEntry = Object.entries(caseData)
-      .sort((a, b) => b[1].count - a[1].count)[0]; // Sortiere absteigend und nimm den ersten
-
-    if (!popularEntry) {
-      return { case_nr: null, count: 0, name: 'Keine Fall-Daten' };
-    }
-
-    // 3. Gib ein sauberes Objekt mit allen benötigten Informationen zurück
-    return {
-      case_nr: popularEntry[0], // z.B. '184'
-      count: popularEntry[1].count, // z.B. 5
-      name: popularEntry[1].name // z.B. 'Der Spuk im alten Haus'
-    };
-  },
     uniqueUserCount: (state) => {
-    if (state.logEntries.length === 0) return 0;
-    // Ein Set speichert automatisch nur einzigartige Werte.
-    // Wir erstellen ein Set aus allen hashed_ip's und geben dessen Größe zurück.
-    const uniqueIPs = new Set(state.logEntries.map(log => log.hashed_ip));
-    return uniqueIPs.size;
-  },
+      if (state.logEntries.length === 0) return 0;
+      const uniqueIPs = new Set(state.logEntries.map(log => log.hashed_ip));
+      return uniqueIPs.size;
+    },
 
-  /**
-   * Bereitet Daten für ein Zeitverlaufs-Diagramm vor.
-   * Gruppiert die Log-Einträge nach Tag.
-   */
-  eventsOverTime: (state) => {
-    if (state.logEntries.length === 0) {
-      return { labels: [], data: [] }; // Leere Daten für den Graphen
-    }
+    eventsOverTime: (state) => {
+      if (state.logEntries.length === 0) {
+        return { labels: [], data: [] };
+      }
+      const countsPerDay = state.logEntries.reduce((acc, log) => {
+        const day = log.timestamp.split('T')[0];
+        acc[day] = (acc[day] || 0) + 1;
+        return acc;
+      }, {});
+      const sortedDays = Object.keys(countsPerDay).sort();
+      const labels = sortedDays;
+      const data = sortedDays.map(day => countsPerDay[day]);
+      return { labels, data };
+    },
 
-    // 1. Zähle die Events pro Tag
-    const countsPerDay = state.logEntries.reduce((acc, log) => {
-      // Extrahiere nur das Datum (JJJJ-MM-TT) aus dem Zeitstempel
-      const day = log.timestamp.split('T')[0];
-      acc[day] = (acc[day] || 0) + 1;
-      return acc;
-    }, {}); // Ergebnis: { '2025-09-22': 5, '2025-09-23': 12 }
+    _countOccurrences: (state) => (getProperty) => {
+      if (state.logEntries.length === 0) return {};
+      return state.logEntries.reduce((acc, log) => {
+        const value = getProperty(log);
+        if (value) {
+          acc[value] = (acc[value] || 0) + 1;
+        }
+        return acc;
+      }, {});
+    },
+    
+    _prepareChartData: (state) => (counts) => {
+      const labels = Object.keys(counts);
+      const data = Object.values(counts);
+      return { labels, data };
+    },
+    
+    deviceTypeDistribution: (state) => {
+      const counts = state._countOccurrences(log => log.client?.device_type);
+      return state._prepareChartData(counts);
+    },
 
-    // 2. Sortiere die Tage chronologisch
-    const sortedDays = Object.keys(countsPerDay).sort();
+    osDistribution: (state) => {
+      const counts = state._countOccurrences(log => log.client?.os?.name);
+      return state._prepareChartData(counts);
+    },
 
-    // 3. Erstelle die Label- und Daten-Arrays für den Graphen
-    const labels = sortedDays;
-    const data = sortedDays.map(day => countsPerDay[day]);
+    browserDistribution: (state) => {
+      const counts = state._countOccurrences(log => log.client?.browser?.name);
+      return state._prepareChartData(counts);
+    },
 
-    return { labels, data };
-  },
+    // --- NEUE GETTER FÜR DIE USERSVIEW ---
+
+    /**
+     * Berechnet die Anzahl der einzigartigen Nutzer pro Tag für den Graphen.
+     */
+    uniqueUsersOverTime: (state) => {
+      if (state.logEntries.length === 0) return { labels: [], data: [] };
+      const logsByDay = state.logEntries.reduce((acc, log) => {
+        const day = log.timestamp.split('T')[0];
+        if (!acc[day]) acc[day] = [];
+        acc[day].push(log.hashed_ip);
+        return acc;
+      }, {});
+      const uniqueUsersPerDay = Object.entries(logsByDay).reduce((acc, [day, ips]) => {
+        acc[day] = new Set(ips).size;
+        return acc;
+      }, {});
+      const sortedDays = Object.keys(uniqueUsersPerDay).sort();
+      const labels = sortedDays;
+      const data = sortedDays.map(day => uniqueUsersPerDay[day]);
+      return { labels, data };
+    },
+
+    /**
+     * Berechnet detaillierte Statistiken für jeden einzelnen Nutzer.
+     */
+    detailedUserStats: (state) => {
+      if (state.logEntries.length === 0) return [];
+      const statsByIp = state.logEntries.reduce((acc, log) => {
+        const ip = log.hashed_ip;
+        if (!acc[ip]) {
+          acc[ip] = { logs: [] };
+        }
+        acc[ip].logs.push(log);
+        return acc;
+      }, {});
+      return Object.entries(statsByIp)
+        .map(([ip, data]) => {
+          data.logs.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+          const lastAccess = data.logs[0].timestamp;
+          const caseCounts = data.logs.reduce((acc, log) => {
+            const caseNr = log.details?.case_nr;
+            if (caseNr) {
+              if (!acc[caseNr]) acc[caseNr] = { count: 0, name: log.details.name };
+              acc[caseNr].count++;
+            }
+            return acc;
+          }, {});
+          const favoriteCaseEntry = Object.entries(caseCounts).sort((a, b) => b[1].count - a[1].count)[0];
+          const favoriteCase = favoriteCaseEntry
+            ? { case_nr: favoriteCaseEntry[0], ...favoriteCaseEntry[1] }
+            : { case_nr: 'N/A', name: 'Keine Fall-Interaktion', count: 0 };
+          return {
+            hashed_ip: ip,
+            lastAccess,
+            favoriteCase
+          };
+        })
+        .sort((a, b) => new Date(b.lastAccess) - new Date(a.lastAccess));
+    },
   },
 
   // actions sind Methoden, die den State verändern (z.B. Daten laden)
   actions: {
     async fetchLogs() {
-      this.isLoading = true; // Ladezustand starten
+      this.isLoading = true;
       this.error = null;
       try {
-        // Lade die JSON-Datei aus dem /public Ordner
         const response = await fetch('/access_log.json');
         if (!response.ok) {
           throw new Error('Netzwerk-Antwort war nicht in Ordnung.');
         }
-        // Weise die geladenen Daten dem State zu
         this.logEntries = await response.json();
       } catch (err) {
         this.error = 'Fehler beim Laden der Log-Datei: ' + err.message;
         console.error(err);
       } finally {
-        this.isLoading = false; // Ladezustand beenden
+        this.isLoading = false;
       }
     },
   },
