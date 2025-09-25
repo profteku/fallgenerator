@@ -5,14 +5,16 @@
     </header>
     
     <main>
-      <div v-if="!logStore.isLoading && !logStore.error">
-        <div class="dashboard-grid kpi-grid">
+      <div v-if="!logStore.isLoading && !caseStore.isLoading && !logStore.error" class="overview-container">
+
+        <div class="kpi-wrapper">
           <BaseCard title="Gesamte Logeinträge">
             <div class="stat-container">
               <span class="stat-number">{{ logStore.totalEvents }}</span>
             </div>
           </BaseCard>
-          <router-link :to="`/users/`">
+
+          <router-link to="/users" style="text-decoration: none;">
             <BaseCard title="Individuelle Nutzer*innen">
               <div class="stat-container">
                 <span class="stat-number">{{ logStore.uniqueUserCount }}</span>
@@ -20,51 +22,80 @@
             </BaseCard>
           </router-link>
         </div>
-        <div class="events-container">
-          <EventsOverTimeChart :chartData="logStore.eventsOverTime" />
-        </div>
-        <div class="popular-container">
-          <MostPopularCase :caseData="logStore.mostPopularCase" />
-        </div>
+
+        <EventsOverTimeChart :chartData="logStore.eventsOverTime" />
+        
+        <MostPopularCase 
+          :caseData="logStore.mostPopularCase" 
+          :coverUrl="fullCaseData?.cover_url" 
+        />
+
       </div>
+      
+      <div v-if="logStore.isLoading || caseStore.isLoading">Lade Daten...</div>
+      <div v-if="logStore.error" class="error-state">{{ logStore.error }}</div>
+      <div v-if="caseStore.error" class="error-state">{{ caseStore.error }}</div>
     </main>
   </div>
 </template>
 
 <script setup>
-import { onMounted } from 'vue';
+import { onMounted, computed, watch } from 'vue'; // Stelle sicher, dass 'computed' importiert wird
 import { useLogStore } from '@/stores/logStore';
+import { useCaseStore } from '@/stores/caseStore';
 
-//Komponents
+// Komponenten
 import BaseCard from '@/components/Dashboard/BaseCard.vue';
 import MostPopularCase from '@/components/Dashboard/MostPopularCase.vue';
 import EventsOverTimeChart from '@/components/Dashboard/EventsOverTimeChart.vue';
 
-// 1. Den Pinia-Store initialisieren
 const logStore = useLogStore();
+const caseStore = useCaseStore();
 
-// 2. Die Lade-Aktion auslösen, sobald die Komponente "eingehängt" wird
-onMounted(() => {
-  // Wir laden die Logs nur, wenn sie noch nicht geladen wurden,
-  // um unnötige Anfragen zu vermeiden.
-  if (logStore.logEntries.length === 0) {
-    logStore.fetchLogs();
+const mostPopularCaseFromLogs = computed(() => logStore.mostPopularCase);
+
+const fullCaseData = computed(() => {
+  const popularCase = mostPopularCaseFromLogs.value;
+  if (popularCase && popularCase.case_nr) {
+    return caseStore.getCaseByNr(popularCase.case_nr);
   }
+  return null;
+});
+/* Beobachte die Werte und gib sie in der Konsole aus
+watch(mostPopularCaseFromLogs, (newValue) => {
+  console.log('1. Beliebtester Fall aus logStore:', newValue);
+});
+
+watch(fullCaseData, (newValue) => {
+  console.log('2. Vollständige Falldaten aus caseStore (.value):', newValue);
+});
+*/
+onMounted(() => {
+  console.log('DashboardView wird geladen, starte Daten-Fetch...');
+  if (logStore.logEntries.length === 0) logStore.fetchLogs();
+  if (caseStore.allCases.length === 0) caseStore.fetchCases();
 });
 </script>
 
 <style scoped>
+/* Dein CSS bleibt unverändert */
 .admin-layout {
-  padding: 2rem;
+  padding: 1rem;
+  max-width: 600px;
+  margin: 0 auto;
 }
 header {
   margin-bottom: 2rem;
-  margin-top: -60px; 
 }
-.dashboard-grid {
+.overview-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+.kpi-wrapper {
   display: grid;
+  grid-template-columns: 1fr 1fr;
   gap: 1rem;
-  margin-bottom: 2rem;
 }
 .stat-container {
   display: flex;
@@ -75,41 +106,9 @@ header {
 .stat-number {
   font-size: 2.5rem;
   font-weight: bold;
-  color: #42b983; /* Ein Beispiel-Grün */
-}
-.loading-state, .error-state {
-  padding: 2rem;
-  text-align: center;
-  background-color: #2a2f45; /* Passend zu deinen Karten */
-  border-radius: 12px;
-  color: white;
+  color: #fff;
 }
 .error-state {
-  background-color: #5e3333;
-}
-.overview-wrapper {
-  width: 100%;
- display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  grid-template-rows: 1fr;
-  grid-column-gap: 0px;
-  grid-row-gap: 1em; 
-}
-.kpi-grid {
-display: grid;
-grid-template-columns: repeat(2, 1fr);
-grid-template-rows: 1fr;
-grid-column-gap: 1.5em;
-
-}
-.distribution-grid {
-  /* Auf größeren Bildschirmen 3 Spalten, sonst eine */
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-}
-.events-container {
-  margin-bottom: 2em;
-}
-.popular-container {
-  margin-bottom: 2em;
+  color: red;
 }
 </style>

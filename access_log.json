@@ -106,5 +106,101 @@
       "screen_resolution": "2560x1080",
       "viewport_size": "1380x956"
     }
+  },
+  {
+    "timestamp": "2025-09-25T08:13:38.172Z",
+    "hashed_ip": "eff8e7ca506627fe15dda5e0e512fcaad70b6d520f37cc76597fdb4f2d83a1a3",
+    "event_type": "spotify_click",
+    "page_path": "/fall/195",
+    "details": {
+      "case_nr": "195",
+      "name": "Im Reich der Ungeheuer"
+    },
+    "client": {
+      "device_type": "desktop",
+      "os": {
+        "name": "Linux"
+      },
+      "browser": {
+        "name": "Firefox",
+        "version": "142.0"
+      }
+    },
+    "screen": {
+      "screen_resolution": "2560x1080",
+      "viewport_size": "1227x956"
+    }
+  },
+  {
+    "timestamp": "2025-09-25T08:15:05.018Z",
+    "hashed_ip": "eff8e7ca506627fe15dda5e0e512fcaad70b6d520f37cc76597fdb4f2d83a1a3",
+    "event_type": "spotify_click",
+    "page_path": "/fall/106",
+    "details": {
+      "case_nr": "106",
+      "name": "Der Mann ohne Kopf"
+    },
+    "client": {
+      "device_type": "desktop",
+      "os": {
+        "name": "Linux"
+      },
+      "browser": {
+        "name": "Firefox",
+        "version": "142.0"
+      }
+    },
+    "screen": {
+      "screen_resolution": "2560x1080",
+      "viewport_size": "1227x956"
+    }
+  },
+  {
+    "timestamp": "2025-09-25T08:17:27.038Z",
+    "hashed_ip": "eff8e7ca506627fe15dda5e0e512fcaad70b6d520f37cc76597fdb4f2d83a1a3",
+    "event_type": "spotify_click",
+    "page_path": "/fall/128",
+    "details": {
+      "case_nr": "128",
+      "name": "Schatten über Hollywood"
+    },
+    "client": {
+      "device_type": "desktop",
+      "os": {
+        "name": "Linux"
+      },
+      "browser": {
+        "name": "Firefox",
+        "version": "142.0"
+      }
+    },
+    "screen": {
+      "screen_resolution": "2560x1080",
+      "viewport_size": "1227x956"
+    }
+  },
+  {
+    "timestamp": "2025-09-25T08:17:30.540Z",
+    "hashed_ip": "eff8e7ca506627fe15dda5e0e512fcaad70b6d520f37cc76597fdb4f2d83a1a3",
+    "event_type": "spotify_click",
+    "page_path": "/fall/97",
+    "details": {
+      "case_nr": "97",
+      "name": "Insektenstachel"
+    },
+    "client": {
+      "device_type": "desktop",
+      "os": {
+        "name": "Linux"
+      },
+      "browser": {
+        "name": "Firefox",
+        "version": "142.0"
+      }
+    },
+    "screen": {
+      "screen_resolution": "2560x1080",
+      "viewport_size": "1227x956"
+    }
   }
 ]
