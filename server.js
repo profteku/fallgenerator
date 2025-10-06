@@ -5,12 +5,37 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import dotenv from 'dotenv'; // Zum Laden von .env-Variablen im Backend
 
-// .env-Variablen laden
-dotenv.config();
+import sqlite3 from 'sqlite3'; //Für die Bewertungsdatenbank
+import { open } from 'sqlite';
 
 // Helfer für __dirname in ES-Modulen
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+const dbPath = path.join(__dirname, 'data', 'ratings.db');
+
+let db;
+
+// .env-Variablen laden
+dotenv.config();
+
+// Datenbankverbindung asynchron herstellen
+async function initializeDb() {
+    db = await open({
+        filename: dbPath,
+        driver: sqlite3.Database
+    });
+    // Tabelle für Bewertungen erstellen, falls sie nicht existiert
+    await db.exec(`
+        CREATE TABLE IF NOT EXISTS ratings (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            folgen_id TEXT NOT NULL,
+            rating INTEGER NOT NULL,
+            timestamp TEXT NOT NULL
+        )
+    `);
+    console.log('SQLite-Datenbank für Bewertungen initialisiert.');
+};
 
 const app = express();
 const PORT = process.env.VITE_SERVER_PORT || 3000; // Port aus .env oder Standard 3000
@@ -134,9 +159,65 @@ app.get('/api/geheimer-fall', async (req, res) => {
   }
 });
 
+// Endpunkte für AbgegebeneRatings
+app.post('/api/ratings', async (req, res) => {
+    try {
+        const { folgenId, rating } = req.body;
+        // Einfache Validierung: Rating muss zwischen 0 und 5 sein
+        if (rating === null || typeof rating !== 'number' || rating < 0 || rating > 5) {
+            return res.status(400).json({ message: 'Ungültige Bewertung.' });
+        }
+        
+        const timestamp = new Date().toISOString();
+        const result = await db.run(
+            `INSERT INTO ratings (folgen_id, rating, timestamp) VALUES (?, ?, ?)`,
+            [folgenId, rating, timestamp]
+        );
+        
+        res.status(201).json({ 
+            message: 'Bewertung erfolgreich gespeichert.', 
+            id: result.lastID 
+        });
+    } catch (error) {
+        console.error('Fehler beim Speichern der Bewertung:', error);
+        res.status(500).json({ message: 'Interner Serverfehler.', details: error.message });
+    }
+});
+
+// Endpunkt zum Senden der Ratings
+app.get('/api/ratings/:folgenId', async (req, res) => {
+    try {
+        const { folgenId } = req.params;
+        const result = await db.get(
+            `SELECT AVG(rating) as averageRating, COUNT(rating) as ratingCount
+             FROM ratings WHERE folgen_id = ?`,
+            [folgenId]
+        );
+
+        if (!result) {
+            return res.status(404).json({ message: 'Keine Bewertungen für diese Folge gefunden.' });
+        }
+
+        const averageRating = result.averageRating ? parseFloat(result.averageRating.toFixed(1)) : 0;
+        
+        res.status(200).json({
+            averageRating: averageRating,
+            ratingCount: result.ratingCount
+        });
+    } catch (error) {
+        console.error('Fehler beim Abrufen der Bewertung:', error);
+        res.status(500).json({ message: 'Interner Serverfehler.', details: error.message });
+    }
+});
+
 
 // Server starten
-app.listen(PORT, () => {
-  console.log(`Backend server running on port ${PORT}`);
-  console.log(`Logging to: ${logFilePath}`);
+initializeDb().then(() => {
+    app.listen(PORT, () => {
+        console.log(`Backend server running on port ${PORT}`);
+        console.log(`Logging to: ${logFilePath}`);
+    });
+}).catch(err => {
+    console.error('Fehler bei der Initialisierung der Datenbank:', err);
+    process.exit(1);
 });

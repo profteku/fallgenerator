@@ -8,6 +8,7 @@ import CaseDetailsInfo from '@/components/CaseDetailsInfo.vue';
 import CaseActions from '@/components/CaseActions.vue';
 import CaseInfo from '@/components/CaseInfo.vue';
 import CaseSpeakers from '@/components/CaseSpeakers.vue';
+import RatingComponent from '@/components/RatingComponent.vue';
 
 const props = defineProps({
   nr: { type: String, required: true },
@@ -48,7 +49,8 @@ onMounted(() => {
         :release-date="currentCase.release_date" 
         :tags="currentCase.tags" 
       />
-    </div> 
+    </div>
+    <RatingComponent :folgenID="currentCase.nr"/>
       <CaseActions 
         :spotify-id="currentCase.spotifyId"
         :casenr="props.nr"

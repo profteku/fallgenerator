@@ -202,5 +202,30 @@
       "screen_resolution": "2560x1080",
       "viewport_size": "1227x956"
     }
+  },
+  {
+    "timestamp": "2025-10-06T20:26:17.970Z",
+    "hashed_ip": "eff8e7ca506627fe15dda5e0e512fcaad70b6d520f37cc76597fdb4f2d83a1a3",
+    "event_type": "spotify_click",
+    "page_path": "/fall/184",
+    "details": {
+      "case_nr": "184",
+      "name": "und der Hexengarten"
+    },
+    "client": {
+      "device_type": "desktop",
+      "os": {
+        "name": "macOS",
+        "version": "10.15.7"
+      },
+      "browser": {
+        "name": "Safari",
+        "version": "18.1"
+      }
+    },
+    "screen": {
+      "screen_resolution": "1512x982",
+      "viewport_size": "727x779"
+    }
   }
 ]
